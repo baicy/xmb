@@ -22,9 +22,9 @@
     return row;
   }
   function renderList(list) {
-    const L = $('colL'), R = $('colR');
-    L.innerHTML = ''; R.innerHTML = '';
-    (list || []).forEach((it, i) => { (i < 10 ? L : R).append(makeRow(it)); });
+    const box = $('list');
+    box.innerHTML = '';
+    (list || []).forEach((it) => box.append(makeRow(it)));
   }
   function showBoard(which) {
     curBoard = which;
@@ -116,7 +116,7 @@
   const urlFor = (y, p) => X.API_BASE + yyOf(y) + p;
   function quarterDisabled(y, q) { const s = new Date(y, (q - 1) * 3, 1); return s < EARLIEST || s > NOW; }
   function monthAvailable(y, m) { return !(y === CUR_Y && m > CUR_M); }
-  const hstate = { year: CUR_Y, quarter: CUR_Q };
+  const hstate = { year: CUR_Y, quarter: CUR_Q, board: 0 }; // board: 0=季度总榜, 1..n=该季第 n 个可用月份
 
   function makeBoard(title) {
     const el = document.createElement('div'); el.className = 'board';
@@ -139,7 +139,11 @@
       const dis = quarterDisabled(hstate.year, s.q);
       tab.className = 'htab' + (hstate.quarter === s.q ? ' on' : '') + (dis ? ' disabled' : '');
       tab.textContent = s.name;
-      if (!dis) tab.onclick = () => { hstate.quarter = s.q; renderHTabs(); renderBoards(); };
+      if (!dis) tab.onclick = () => {
+        hstate.quarter = s.q;
+        hstate.board = 0; // 切季度后回到"季度总榜"
+        renderHTabs(); renderBTabs(); renderBoards();
+      };
       wrap.append(tab);
     });
   }
@@ -157,26 +161,51 @@
         const f = SEASONS.find((s) => !quarterDisabled(hstate.year, s.q));
         if (f) hstate.quarter = f.q;
       }
-      renderHTabs(); renderBoards();
+      hstate.board = 0; // 切年份后回到"季度总榜"
+      renderHTabs(); renderBTabs(); renderBoards();
     };
+  }
+  // 板切换标签：季度总榜 / 7月 / 8月 / 9月（只列可用月份），一次只显示一个榜
+  function availMonths(y, q) { return SEASONS[q - 1].months.filter((m) => monthAvailable(y, m)); }
+  function renderBTabs() {
+    const wrap = $('btabs'); wrap.innerHTML = '';
+    if (quarterDisabled(hstate.year, hstate.quarter)) { wrap.style.display = 'none'; return; }
+    wrap.style.display = '';
+    const y = hstate.year, q = hstate.quarter;
+    const defs = [{ idx: 0, label: '季度总榜' }].concat(availMonths(y, q).map((m, i) => ({ idx: i + 1, label: m + '月' })));
+    // 越界保护：切季度后 board 可能超出新季度可用数
+    const maxIdx = defs.length - 1;
+    if (hstate.board > maxIdx) hstate.board = maxIdx;
+    defs.forEach((d) => {
+      const tab = document.createElement('span');
+      tab.className = 'btab' + (hstate.board === d.idx ? ' on' : '');
+      tab.textContent = d.label;
+      tab.onclick = () => { hstate.board = d.idx; renderBTabs(); renderBoards(); };
+      wrap.append(tab);
+    });
   }
   function renderBoards() {
     const wrap = $('boards'); wrap.innerHTML = '';
     const y = hstate.year, q = hstate.quarter;
     if (quarterDisabled(y, q)) { wrap.innerHTML = '<div class="empty">该季度暂无榜单数据</div>'; return; }
     const season = SEASONS[q - 1];
-    const qBoard = makeBoard(y + '年 ' + season.name + '（Q' + q + '）· 季度总榜');
-    qBoard.el.classList.add('quarter');
-    wrap.append(qBoard.el);
-    const avail = season.months.filter((m) => monthAvailable(y, m));
-    avail.forEach((m) => { const mb = makeBoard(y + '年' + m + '月'); wrap.append(mb.el); });
-    loadBoard(qBoard, y, 'q' + q);
-    avail.forEach((m, idx) => {
-      const el = wrap.children[idx + 1];
-      loadBoard({ el, status: el.querySelector('.bstatus'), list: el.querySelector('.brows') }, y, monthPeriod(m));
-    });
+    const avail = availMonths(y, q);
+    // 只渲染当前选中的一个板：0=季度总榜，1..n=月份
+    let title, period;
+    if (hstate.board <= 0) {
+      title = y + '年 ' + season.name + '（Q' + q + '）· 季度总榜';
+      period = 'q' + q;
+    } else {
+      const m = avail[hstate.board - 1];
+      title = y + '年' + m + '月';
+      period = monthPeriod(m);
+    }
+    const b = makeBoard(title);
+    if (hstate.board <= 0) b.el.classList.add('quarter');
+    wrap.append(b.el);
+    loadBoard(b, y, period);
   }
-  function renderHistory() { initYearOnce(); renderHTabs(); renderBoards(); }
+  function renderHistory() { initYearOnce(); renderHTabs(); renderBTabs(); renderBoards(); }
 
   // ---------- 初始化 ----------
   function init() {
