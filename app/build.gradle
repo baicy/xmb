@@ -27,7 +27,18 @@ android {
     }
 }
 
+// 统一 kotlin-stdlib 版本：appcompat/webkit 传递的旧版 kotlin-stdlib-jdk7/8(1.6.x)
+// 会与 AGP 默认的 kotlin-stdlib(1.8.22) 冲突报 Duplicate class，强制对齐到 1.9.24
+configurations.all {
+    resolutionStrategy {
+        force 'org.jetbrains.kotlin:kotlin-stdlib:1.9.24'
+        force 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.9.24'
+        force 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.24'
+    }
+}
+
 dependencies {
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.9.24'
     implementation 'androidx.appcompat:appcompat:1.7.0'
     // WebViewAssetLoader / WebViewClientCompat：把 assets 以同源 https 暴露，
     // 绕过 file:// 下 localStorage / Service Worker 不可用的限制
