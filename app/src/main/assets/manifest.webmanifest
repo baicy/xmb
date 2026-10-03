@@ -1,0 +1,20 @@
+{
+  "name": "小芒榜",
+  "short_name": "小芒榜",
+  "description": "月榜/季榜双榜单实时查看 + 变动记录（标注属于哪榜）+ 每分钟自动刷新，数据来自芒果 TV 公开接口",
+  "lang": "zh-CN",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#ff6600",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

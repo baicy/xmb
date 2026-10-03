@@ -1,0 +1,35 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.xiaomang.bang'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId 'com.xiaomang.bang'
+        minSdk 26          // Android 8.0+；只需自适应图标(anydpi-v26)，无需 png 图标
+        targetSdk 34
+        versionCode 1
+        versionName '1.0.1'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    // WebViewAssetLoader / WebViewClientCompat：把 assets 以同源 https 暴露，
+    // 绕过 file:// 下 localStorage / Service Worker 不可用的限制
+    implementation 'androidx.webkit:webkit:1.11.0'
+}

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 简单白色芒果近似形：白色椭圆果身 + 绿色小三角叶，作为启动图标前景 -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M54,30 C72,30 80,46 76,62 C72,80 56,84 44,78 C30,70 28,48 40,38 C45,33 49,30 54,30 Z" />
+    <path
+        android:fillColor="#3CB371"
+        android:pathData="M58,28 L72,20 L66,34 Z" />
+</vector>

@@ -1,0 +1,7 @@
+<resources>
+    <style name="Theme.XiaoMangNoActionBar" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="android:statusBarColor">#FF7A00</item>
+        <item name="android:navigationBarColor">#FF7A00</item>
+        <item name="android:windowFullscreen">false</item>
+    </style>
+</resources>

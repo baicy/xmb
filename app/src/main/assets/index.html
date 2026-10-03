@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <meta name="theme-color" content="#ff6600">
+  <title>小芒榜</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <span id="title">🥭 小芒榜</span>
+    <span id="chgDot"></span>
+    <span class="spacer"></span>
+    <span class="tabs">
+      <span id="tabMonth" class="tab on">月</span>
+      <span id="tabQuarter" class="tab">季</span>
+    </span>
+    <label class="switch"><input type="checkbox" id="auto"> 自动</label>
+    <button id="refresh" type="button">刷新</button>
+  </header>
+
+  <main>
+    <section id="view-board" class="view on">
+      <p id="meta">加载中…</p>
+      <div id="cols"><div class="col" id="colL"></div><div class="col" id="colR"></div></div>
+    </section>
+
+    <section id="view-changes" class="view">
+      <div class="cv-hd">
+        <span id="cvTitle">变动记录</span>
+        <button id="cvClear" class="cv-clear" type="button">清空</button>
+      </div>
+      <div id="changesList"></div>
+    </section>
+
+    <section id="view-history" class="view">
+      <div class="hist-bar">
+        <select id="year"></select>
+        <span class="htabs" id="htabs"></span>
+      </div>
+      <div class="boards" id="boards"></div>
+    </section>
+  </main>
+
+  <nav>
+    <div class="nav-item on" id="navBoard">榜单</div>
+    <div class="nav-item" id="navChanges">变动<span class="badge" id="navBadge"></span></div>
+    <div class="nav-item" id="navHistory">历史</div>
+  </nav>
+
+  <script src="core.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
